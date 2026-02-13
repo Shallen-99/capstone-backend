@@ -1,17 +1,19 @@
 const express = require("express");
 const cors = require("cors");
 
+const authRoutes = require("./routes/authRoutes");
+const tripRoutes = require("./routes/tripRoutes");
+const stateVisitRoutes = require("./routes/stateVisitRoutes");
+
 const app = express();
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-const authRoutes = require("./routes/authRoutes");
+// Routes
 app.use("/api/auth", authRoutes);
-
-
-app.get("/", (req, res) => {
-    res.send("Travel Log API running");
-});
+app.use("/api/trips", tripRoutes);
+app.use("/api/trips", stateVisitRoutes);
 
 module.exports = app;
