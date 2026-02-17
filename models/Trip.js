@@ -8,14 +8,40 @@ const tripSchema = new mongoose.Schema(
       trim: true,
       maxlength: 100
     },
+
+    //Optional short description (if you still want it)
     description: {
       type: String,
-      trim: true
+      trim: true,
+      default: ""
     },
+
+    //Using geo.id values (ex: "08" for Colorado)
     states: {
-      type: [String],   // array of state codes like ["CA", "TX"]
+      type: [String],
       default: []
     },
+
+    //Trip notes
+    comment: {
+      type: String,
+      trim: true,
+      default: ""
+    },
+
+    //Rating 1–5
+    rating: {
+      type: Number,
+      min: 1,
+      max: 5
+    },
+
+    //For MVP: store photo URLs
+    photos: {
+      type: [String],
+      default: []
+    },
+
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
