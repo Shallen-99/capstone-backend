@@ -12,6 +12,10 @@ const tripSchema = new mongoose.Schema(
       type: String,
       trim: true
     },
+    states: {
+      type: [String],   // array of state codes like ["CA", "TX"]
+      default: []
+    },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

@@ -8,7 +8,7 @@ exports.createTrip = async (req, res) => {
     const trip = await Trip.create({
       title,
       description,
-      user: req.user._id
+      owner: req.user.id  //  FIXED
     });
 
     res.status(201).json(trip);
@@ -17,10 +17,10 @@ exports.createTrip = async (req, res) => {
   }
 };
 
-// GET All Trips (Only Logged-In User)
+// GET All Trips
 exports.getTrips = async (req, res) => {
   try {
-    const trips = await Trip.find({ user: req.user._id });
+    const trips = await Trip.find({ owner: req.user.id }); //  FIXED
     res.json(trips);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -36,7 +36,7 @@ exports.getTripById = async (req, res) => {
       return res.status(404).json({ message: "Trip not found" });
     }
 
-    if (trip.user.toString() !== req.user._id.toString()) {
+    if (trip.owner.toString() !== req.user.id) { //  FIXED
       return res.status(403).json({ message: "Not authorized" });
     }
 
@@ -55,7 +55,7 @@ exports.updateTrip = async (req, res) => {
       return res.status(404).json({ message: "Trip not found" });
     }
 
-    if (trip.user.toString() !== req.user._id.toString()) {
+    if (trip.owner.toString() !== req.user.id) { //  FIXED
       return res.status(403).json({ message: "Not authorized" });
     }
 
@@ -80,7 +80,7 @@ exports.deleteTrip = async (req, res) => {
       return res.status(404).json({ message: "Trip not found" });
     }
 
-    if (trip.user.toString() !== req.user._id.toString()) {
+    if (trip.owner.toString() !== req.user.id) { //  FIXED
       return res.status(403).json({ message: "Not authorized" });
     }
 
