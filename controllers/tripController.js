@@ -3,12 +3,23 @@ const Trip = require("../models/Trip");
 // CREATE Trip
 exports.createTrip = async (req, res) => {
   try {
-    const { title, description } = req.body;
+    const {
+      title,
+      description = "",
+      states = [],
+      comment = "",
+      rating,
+      photos = []
+    } = req.body;
 
     const trip = await Trip.create({
       title,
       description,
-      user: req.user._id   // FIXED HERE
+      states,
+      comment,
+      rating,
+      photos,
+      user: req.user._id
     });
 
     res.status(201).json(trip);
@@ -16,6 +27,7 @@ exports.createTrip = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 // GET All Trips
 exports.getTrips = async (req, res) => {
