@@ -9,7 +9,9 @@ exports.createTrip = async (req, res) => {
       states = [],
       comment = "",
       rating,
-      photos = []
+      photos = [],
+      startDate,   
+      endDate      
     } = req.body;
 
     const trip = await Trip.create({
@@ -19,6 +21,8 @@ exports.createTrip = async (req, res) => {
       comment,
       rating,
       photos,
+      startDate: startDate || undefined, 
+      endDate: endDate || undefined,    
       user: req.user._id
     });
 
@@ -28,11 +32,40 @@ exports.createTrip = async (req, res) => {
   }
 };
 
+// POST /api/trips/:tripId/media
+exports.addTripMedia = async (req, res) => {
+  try {
+    const { tripId } = req.params;
+    const { url, type, filename } = req.body;
+
+    if (!url || !type || !filename) {
+      return res.status(400).json({ message: "url, type, and filename are required" });
+    }
+
+    const trip = await Trip.findById(tripId);
+
+    if (!trip) {
+      return res.status(404).json({ message: "Trip not found" });
+    }
+
+    if (trip.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: "Not authorized" });
+    }
+
+    trip.media.push({ url, type, filename });
+    await trip.save();
+
+    res.json(trip);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 
 // GET All Trips
 exports.getTrips = async (req, res) => {
   try {
-    const trips = await Trip.find({ user: req.user._id }); // FIXED
+    const trips = await Trip.find({ user: req.user._id });
     res.json(trips);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -48,7 +81,7 @@ exports.getTripById = async (req, res) => {
       return res.status(404).json({ message: "Trip not found" });
     }
 
-    if (trip.user.toString() !== req.user._id.toString()) { // FIXED
+    if (trip.user.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: "Not authorized" });
     }
 
@@ -67,7 +100,7 @@ exports.updateTrip = async (req, res) => {
       return res.status(404).json({ message: "Trip not found" });
     }
 
-    if (trip.user.toString() !== req.user._id.toString()) { // FIXED
+    if (trip.user.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: "Not authorized" });
     }
 
@@ -92,7 +125,7 @@ exports.deleteTrip = async (req, res) => {
       return res.status(404).json({ message: "Trip not found" });
     }
 
-    if (trip.user.toString() !== req.user._id.toString()) { // FIXED
+    if (trip.user.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: "Not authorized" });
     }
 

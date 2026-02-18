@@ -9,38 +9,51 @@ const tripSchema = new mongoose.Schema(
       maxlength: 100
     },
 
-    //Optional short description (if you still want it)
     description: {
       type: String,
       trim: true,
       default: ""
     },
 
-    //Using geo.id values (ex: "08" for Colorado)
     states: {
       type: [String],
       default: []
     },
 
-    //Trip notes
     comment: {
       type: String,
       trim: true,
       default: ""
     },
 
-    //Rating 1–5
     rating: {
       type: Number,
       min: 1,
       max: 5
     },
 
-    //For MVP: store photo URLs
+    startDate: {
+      type: Date
+    },
+    endDate: {
+      type: Date
+    },
+
+    // Keep for MVP / backward compatibility
     photos: {
       type: [String],
       default: []
     },
+
+    // New: uploaded media objects
+    media: [
+      {
+        url: { type: String, required: true }, // "/uploads/filename.ext"
+        type: { type: String, enum: ["image", "video"], required: true },
+        filename: { type: String, required: true },
+        createdAt: { type: Date, default: Date.now }
+      }
+    ],
 
     user: {
       type: mongoose.Schema.Types.ObjectId,

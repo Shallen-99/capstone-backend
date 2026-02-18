@@ -7,10 +7,10 @@ const {
   getTrips,
   getTripById,
   updateTrip,
-  deleteTrip
+  deleteTrip,
+  addTripMedia
 } = require("../controllers/tripController");
 
-// All routes protected
 router.route("/")
   .post(protect, createTrip)
   .get(protect, getTrips);
@@ -19,5 +19,8 @@ router.route("/:tripId")
   .get(protect, getTripById)
   .put(protect, updateTrip)
   .delete(protect, deleteTrip);
+
+// Attach uploaded media to trip
+router.post("/:tripId/media", protect, addTripMedia);
 
 module.exports = router;
